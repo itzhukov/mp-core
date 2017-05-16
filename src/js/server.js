@@ -9,11 +9,36 @@ let frameTime = 45; //  45ms, 22hz
 let lastTime = 0;
 let currTime = Date.now()
 let timeToCall = 0;
-let connect = null;
+var connect = null;
 
 io.on('connection', onConnected);
 
 setTimeout(frameWatcher, frameTime);
+
+function frameWatcher() {
+	currTime = Date.now(),
+	timeToCall = Math.max( 0, frameTime - ( currTime - lastTime ) );
+	
+	if (timeToCall == 0) tick();
+}
+
+function tick() {
+	// console.log('-> tick', currTime);
+
+	if (connect){
+		connect.emit('serverUpdate', {
+			players: players
+		});
+
+		connect.broadcast.emit('serverUpdate', {
+			players: players
+		});
+	}
+
+	lastTime = currTime + timeToCall;
+
+	setTimeout(frameWatcher, frameTime);
+}
 
 function onConnected(socket){
 	console.log('-> Player connected', socket.id);
@@ -59,33 +84,6 @@ function onDisconnect(socket){
 
 	printPlayers();
 	
-}
-
-function tick() {
-	// console.log('-> tick', currTime);
-
-	if (connect){
-		console.log('-> serverUpdate', currTime);
-
-		connect.emit('serverUpdate', {
-			players: players
-		});
-
-		connect.broadcast.emit('serverUpdate', {
-			players: players
-		});
-	}
-
-	lastTime = currTime + timeToCall;
-
-	setTimeout(frameWatcher, frameTime);
-}
-
-function frameWatcher() {
-	currTime = Date.now(),
-	timeToCall = Math.max( 0, frameTime - ( currTime - lastTime ) );
-	
-	if (timeToCall == 0) tick();
 }
 
 function printPlayers(){

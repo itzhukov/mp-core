@@ -25,7 +25,47 @@ let lastTime = 0;
 let currTime = Date.now()
 let timeToCall = 0;
 
-requestAnimationFrame(frameWatcher)
+const buttons = document.querySelectorAll('.button');
+
+requestAnimationFrame(frameWatcher);
+
+initKB();
+
+function initKB() {
+	buttons.forEach( (btn) => {
+		btn.addEventListener('click', keyClick);
+	});
+}
+
+function keyClick(event) {
+	event.preventDefault();
+
+	let target = event.target;
+	let move = event.target.dataset.move;
+
+	step (move);
+}
+
+function step(move = '') {
+	switch(move){
+		case 'up':
+			player.moveTo(null, --player.y);
+			break;
+
+		case 'down':
+			player.moveTo(null, ++player.y);
+			break;
+
+		case 'left':
+			player.moveTo(--player.x, null);
+			break;
+
+		case 'right':
+			player.moveTo(++player.x, null);
+			break;
+	}
+	console.log(player);
+}
 
 function frameWatcher(timestamp) {
 	currTime = Date.now(),
@@ -40,8 +80,6 @@ function tick() {
 		x: player.x,
 		y: player.y
 	});
-
-	console.log(players);
 
 	lastTime = currTime + timeToCall;
 

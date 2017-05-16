@@ -10,8 +10,8 @@ class Player {
 	}
 
 	moveTo(x, y){
-		this.x = x;
-		this.y = y;
+		if (x != null) this.x = x;
+		if (y != null) this.y = y;
 	}
 }
 
