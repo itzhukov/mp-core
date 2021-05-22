@@ -1,6 +1,6 @@
 import io from 'socket.io-client';
 
-const socket = io('http://10.8.160.171:9090');
+const socket = io('http://localhost:9090');
 const PARTICLE_SIZE = 5;
 const UPDATE_RATE = 60/1000; // 16ms / 60hz;
 
@@ -76,6 +76,17 @@ function touchstart(e) {
 function moved(e) {
 	x = e.x;
 	y = e.y;
+
+	if (e.x != undefined && e.y != undefined){
+		x = e.x;
+		y = e.y;
+	} else {
+		x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+		y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+	}
+
+	x -= canvas.offsetLeft;
+	y -= canvas.offsetTop;
 }
 
 function loop() {
