@@ -37,7 +37,7 @@ io.on('connection', (client) => {
 		return (1-amt) * start + amt * end
 	}
 
-	
+
 });
 
 socketServer.listen(9090);
